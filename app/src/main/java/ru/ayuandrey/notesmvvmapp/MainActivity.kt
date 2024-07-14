@@ -47,7 +47,7 @@ class MainActivity : ComponentActivity() {
                         TopAppBar(
                             title = {
                                 Text(text = "Приложение заметки")
-                                    },
+                            },
                             modifier = Modifier.height(52.dp),
                             colors = TopAppBarDefaults.topAppBarColors(
                                 containerColor = MaterialTheme.colorScheme.onPrimaryContainer,
@@ -58,12 +58,12 @@ class MainActivity : ComponentActivity() {
                     bottomBar = {
                         Text(text = "Приложение заметки")
                     },
-                ) {innerPadding ->
+                ) { innerPadding ->
                     Surface(
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(innerPadding),
-                        color = MaterialTheme.colorScheme.primaryContainer
+                        //color = MaterialTheme.colorScheme.tertiary
                     ) {
                         NotesNavHost()
                     }
