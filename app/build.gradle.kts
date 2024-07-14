@@ -1,6 +1,10 @@
 plugins {
+    //id("kotlin-kapt")
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+    //kotlin("kapt") version "2.0.0"
+    //id("com.google.devtools.ksp")
+    //alias(libs.plugins.kapt)
 }
 
 android {
@@ -68,7 +72,18 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
 
     val nav_version = "2.7.7"
-
     implementation("androidx.navigation:navigation-compose:$nav_version")
 
+
+    implementation(libs.androidx.runtime.livedata)
+    implementation (libs.androidx.room.runtime)
+
+
+    implementation (libs.androidx.room.ktx)
+
+
+
+   // implementation(libs.androidx.room)
+    //annotationProcessor(libs.androidx.room.annotation.processor)
+    //ksp(libs.androidx.room.annotation.processor)
 }
