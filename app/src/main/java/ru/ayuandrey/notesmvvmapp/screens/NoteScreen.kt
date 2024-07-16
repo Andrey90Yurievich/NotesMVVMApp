@@ -1,6 +1,7 @@
 package ru.ayuandrey.notesmvvmapp.screens
 
 import android.annotation.SuppressLint
+import android.app.Application
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,18 +14,21 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import ru.ayuandrey.notesmvvmapp.MainViewModel
+import ru.ayuandrey.notesmvvmapp.MainViewModelFactory
 import ru.ayuandrey.notesmvvmapp.ui.theme.NotesMVVMAppTheme
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun NoteScreen(navController: NavHostController) {
+fun NoteScreen(navController: NavHostController, mViewModel: MainViewModel) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         containerColor = MaterialTheme.colorScheme.primaryContainer
@@ -67,6 +71,9 @@ fun NoteScreen(navController: NavHostController) {
 @Composable
 fun prevNoteScreen() {
     NotesMVVMAppTheme {
-        NoteScreen(navController = rememberNavController())
+        val context = LocalContext.current
+        val mViewModel: MainViewModel =
+            viewModel(factory = MainViewModelFactory(context.applicationContext as Application))
+        NoteScreen(navController = rememberNavController(), mViewModel = mViewModel)
     }
 }

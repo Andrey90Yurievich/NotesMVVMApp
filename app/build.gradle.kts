@@ -4,7 +4,9 @@ plugins {
     alias(libs.plugins.jetbrainsKotlinAndroid)
     //kotlin("kapt") version "2.0.0"
     //id("com.google.devtools.ksp")
-    //alias(libs.plugins.kapt)
+    alias(libs.plugins.compilerKsp)
+    //id("kotlin-kapt")
+    //id("com.google.devtools.ksp")
 }
 
 android {
@@ -37,14 +39,18 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
+
     kotlinOptions {
         jvmTarget = "1.8"
     }
+
+
     buildFeatures {
         compose = true
     }
+
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
+        kotlinCompilerExtensionVersion = "1.5.10"
     }
     packaging {
         resources {
@@ -52,6 +58,8 @@ android {
         }
     }
 }
+
+
 
 dependencies {
 
@@ -71,19 +79,34 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-    val nav_version = "2.7.7"
-    implementation("androidx.navigation:navigation-compose:$nav_version")
+
+    implementation(libs.androidx.navigation.compose)
 
 
     implementation(libs.androidx.runtime.livedata)
+
+
+
+
+
     implementation (libs.androidx.room.runtime)
-
-
     implementation (libs.androidx.room.ktx)
 
 
 
-   // implementation(libs.androidx.room)
-    //annotationProcessor(libs.androidx.room.annotation.processor)
-    //ksp(libs.androidx.room.annotation.processor)
+//    implementation(libs.androidx.room)
+//    annotationProcessor(libs.androidx.room.annotation.processor)
+//    ksp(libs.androidx.room.annotation.processor)
+
+
+//    val room_version = "2.6.1"
+//    implementation(libs.androidx.room.runtime)
+    ksp(libs.androidx.room.compiler)
+
+
+    annotationProcessor(libs.androidx.room.compiler)
+    //ksp(libs.androidx.room.compiler)
+
+
+
 }

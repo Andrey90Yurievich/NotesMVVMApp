@@ -27,12 +27,13 @@ import ru.ayuandrey.notesmvvmapp.ui.theme.NotesMVVMAppTheme
 import ru.ayuandrey.notesmvvmapp.utils.TYPE_FIREBASE
 import ru.ayuandrey.notesmvvmapp.utils.TYPE_ROOM
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "SuspiciousIndentation")
 @Composable
-fun StartScreen(navController: NavHostController) {
+fun StartScreen(navController: NavHostController, mViewModel: MainViewModel) {
     val context = LocalContext.current
     val mViewModel: MainViewModel =
         viewModel(factory = MainViewModelFactory(context.applicationContext as Application))
+
        Scaffold(
            modifier = Modifier.fillMaxSize(),
            containerColor = MaterialTheme.colorScheme.tertiary
@@ -41,32 +42,34 @@ fun StartScreen(navController: NavHostController) {
                modifier = Modifier.fillMaxSize(),
                verticalArrangement = Arrangement.Center,
                horizontalAlignment = Alignment.CenterHorizontally,
-
            ) {
                Text(text = "СТАРТОВЫЙ ЭКРАН")
                Button(
                    onClick = {
-                       mViewModel.initDatabase(TYPE_ROOM)
-                       navController.navigate(route = NavRoute.Main.route)
+                       mViewModel.initDatabase(TYPE_ROOM) {
+                           navController.navigate(route = NavRoute.Main.route)
+                       }
                    },
-                modifier = Modifier
-                    .width(200.dp)
-                    .padding(vertical = 8.dp)
-            ) {
-                Text(text = "ROOM БД")
-            }
-            Button(
-                onClick = {
-                    mViewModel.initDatabase(TYPE_FIREBASE)
-                    navController.navigate(route = NavRoute.Main.route)
-                },
-                modifier = Modifier
-                    .width(200.dp)
-                    .padding(vertical = 8.dp)
-            ) {
-                Text(text = "FIREBASE БД")
-            }
-        }
+                   modifier = Modifier
+                       .width(200.dp)
+                       .padding(vertical = 8.dp)
+               ) {
+                   Text(text = "ROOM БД")
+               }
+               Button(
+                   onClick = {
+                       mViewModel.initDatabase(TYPE_FIREBASE) {
+                           navController.navigate(route = NavRoute.Main.route)
+                       }
+
+                   },
+                   modifier = Modifier
+                       .width(200.dp)
+                       .padding(vertical = 8.dp)
+               ) {
+                   Text(text = "FIREBASE БД")
+               }
+           }
        }
 }
 
@@ -75,6 +78,9 @@ fun StartScreen(navController: NavHostController) {
 @Composable
 fun prevStartScreen() {
      NotesMVVMAppTheme{
-          StartScreen(navController = rememberNavController())
+         val context = LocalContext.current
+         val mViewModel: MainViewModel =
+             viewModel(factory = MainViewModelFactory(context.applicationContext as Application))
+          StartScreen(navController = rememberNavController(), mViewModel = mViewModel)
  }
 }
