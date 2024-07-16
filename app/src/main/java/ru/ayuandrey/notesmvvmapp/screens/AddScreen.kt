@@ -1,6 +1,7 @@
 package ru.ayuandrey.notesmvvmapp.screens
 
 import android.annotation.SuppressLint
+import android.app.Application
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,23 +18,31 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import ru.ayuandrey.notesmvvmapp.MainViewModel
+import ru.ayuandrey.notesmvvmapp.MainViewModelFactory
+import ru.ayuandrey.notesmvvmapp.model.Note
 import ru.ayuandrey.notesmvvmapp.navigation.NavRoute
 import ru.ayuandrey.notesmvvmapp.ui.theme.NotesMVVMAppTheme
+import ru.ayuandrey.notesmvvmapp.utils.Constants
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun AddScreen(navController: NavHostController) {
+fun AddScreen(navController: NavHostController, viewModel: MainViewModel) {
 
     var title by remember { mutableStateOf("") }
     var subtitle by remember { mutableStateOf("") }
-
+    var isButtonEnabled by remember {
+        mutableStateOf(false)
+    }
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.error
@@ -44,28 +53,39 @@ fun AddScreen(navController: NavHostController) {
             verticalArrangement = Arrangement.Center,
         ) {
             Text(
-                text = "555tgtg",
+                text = Constants.Keys.ADD_NEW_NOTE,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(vertical = 8.dp)
             )
             OutlinedTextField(
                 value = title,
-                onValueChange = { title = it },
-                label = { Text(text = "заголовок")}
+                onValueChange = {
+                    title = it
+                    isButtonEnabled = title.isNotEmpty() && subtitle.isNotEmpty()
+                },
+                label = { Text(text = Constants.Keys.NOTE_TITLE) },
+                isError = title.isEmpty()
             )
             OutlinedTextField(
                 value = subtitle,
-                onValueChange = { subtitle = it },
-                label = { Text(text = "подзаголовок")}
+                onValueChange = {
+                    subtitle = it
+                    isButtonEnabled = title.isNotEmpty() && subtitle.isNotEmpty()
+                                },
+                label = { Text(text = Constants.Keys.NOTE_SUBTITLE)},
+                isError = subtitle.isEmpty()
             )
             Button(
                 modifier = Modifier.padding(16.dp),
+                enabled = isButtonEnabled,
                 onClick = {
-                    navController.navigate(NavRoute.Main.route)
+                    viewModel.addNote(note = Note(title = title, subtitle = subtitle)) {
+                        navController.navigate(NavRoute.Main.route)
+                    }
                 }
             ) {
-                Text(text = "Сохранить")
+                Text(text = Constants.Keys.ADD_NOTE)
             }
         }
     }
@@ -73,8 +93,11 @@ fun AddScreen(navController: NavHostController) {
 
 @Preview(showBackground = true)
 @Composable
-fun prevAddScreen() {
+fun PrevAddScreen() {
     NotesMVVMAppTheme {
-        AddScreen(navController = rememberNavController())
+        val context = LocalContext.current
+        val mViewModel: MainViewModel =
+            viewModel(factory = MainViewModelFactory(context.applicationContext as Application))
+        AddScreen(navController = rememberNavController(), viewModel = mViewModel)
     }
 }

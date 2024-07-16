@@ -8,38 +8,64 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import ru.ayuandrey.notesmvvmapp.database.room.AppRoomDatabase
+import ru.ayuandrey.notesmvvmapp.database.room.repository.RoomRepository
 import ru.ayuandrey.notesmvvmapp.model.Note
+import ru.ayuandrey.notesmvvmapp.utils.REPOSITORY
 import ru.ayuandrey.notesmvvmapp.utils.TYPE_FIREBASE
 import ru.ayuandrey.notesmvvmapp.utils.TYPE_ROOM
 
-class MainViewModel (application: Application) : AndroidViewModel(application) {
 
-    val readTest: MutableLiveData<List<Note>> by lazy {
-        MutableLiveData<List<Note>>()
-    }
+class MainViewModel(application: Application) : AndroidViewModel(application) {
 
-    val dbType: MutableLiveData<String> by lazy {
-        MutableLiveData<String>(TYPE_ROOM)
-    }
+    val context = application
 
-    init {
-        readTest.value =
-            when(dbType.value) {
-                TYPE_ROOM -> {
-                    listOf<Note>(
-                        Note(title = "Note 1", subtitle = "subtitle 1")
-                    )
-                }
-                TYPE_FIREBASE -> listOf()
-                else -> listOf()
-            }
-    }
-
-    fun initDatabase(type: String) {
-        dbType.value = type
+    fun initDatabase(type: String, onSuccess: () -> Unit) {
         Log.d("проверка данных", "MainViewModel создание БД $type")
+        when (type) {
+            TYPE_ROOM -> {
+                val dao = AppRoomDatabase.getInstance(context = context).getRoomDao()
+                REPOSITORY = RoomRepository(dao)
+                onSuccess()
+            }
+        }
     }
+
+    fun addNote(note: Note, onSuccess: () -> Unit) {
+        viewModelScope.launch(Dispatchers.IO) {
+            REPOSITORY.create(note = note) {
+                viewModelScope.launch(Dispatchers.Main) {
+                    onSuccess()
+                }
+            }
+        }
+    }
+
+    fun updateNote(note: Note, onSuccess: () -> Unit) {
+        viewModelScope.launch(Dispatchers.IO) {
+            REPOSITORY.update(note = note) {
+                viewModelScope.launch(Dispatchers.Main) {
+                    onSuccess()
+                }
+            }
+        }
+    }
+
+    fun deleteNote(note: Note, onSuccess: () -> Unit) {
+        viewModelScope.launch(Dispatchers.IO) {
+            REPOSITORY.delete(note = note) {
+                viewModelScope.launch(Dispatchers.Main) {
+                    onSuccess()
+                }
+            }
+        }
+    }
+
+    fun readAllNotes() = REPOSITORY.readAll
 }
 
 class MainViewModelFactory(private val application: Application) : ViewModelProvider.Factory {

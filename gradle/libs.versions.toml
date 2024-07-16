@@ -1,20 +1,27 @@
 [versions]
-agp = "8.3.0-rc02"
-kotlin = "1.9.0"
-coreKtx = "1.12.0"
+agp = "8.3.2"
+kotlin = "1.9.22"
+coreKtx = "1.13.1"
 junit = "4.13.2"
-junitVersion = "1.1.5"
-espressoCore = "3.5.1"
-lifecycleRuntimeKtx = "2.7.0"
-activityCompose = "1.8.2"
-composeBom = "2023.08.00"
-roomRuntime = "2.4.2"
+junitVersion = "1.2.1"
+espressoCore = "3.6.1"
+lifecycleRuntimeKtx = "2.8.3"
+activityCompose = "1.9.0"
+composeBom = "2024.06.00"
+navigationCompose = "2.7.7"
+roomRuntime = "2.6.1"
 runtimeLivedata = "1.6.8"
 ktx = "1.9.0"
+roomKtx = "1.9.22-1.0.17"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
+androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomRuntime" }
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomRuntime" }
+
+
+
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomRuntime" }
 androidx-runtime-livedata = { module = "androidx.compose.runtime:runtime-livedata", version.ref = "runtimeLivedata" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -34,4 +41,5 @@ androidx-material3 = { group = "androidx.compose.material3", name = "material3" 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 jetbrainsKotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+compilerKsp = { id = "com.google.devtools.ksp", version.ref = "roomKtx" }
 
