@@ -181,7 +181,7 @@ fun NoteScreen(navController: NavHostController, viewModel: MainViewModel, noteI
                             }
                         }
                     ) {
-                        Text(text = Constants.Keys.SUBTITLE)
+                        Text(text = Constants.Keys.UPDATE_NOTE)
                     }
                 }
             }
