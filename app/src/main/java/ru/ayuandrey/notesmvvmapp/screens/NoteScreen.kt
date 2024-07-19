@@ -43,6 +43,9 @@ import ru.ayuandrey.notesmvvmapp.model.Note
 import ru.ayuandrey.notesmvvmapp.navigation.NavRoute
 import ru.ayuandrey.notesmvvmapp.ui.theme.NotesMVVMAppTheme
 import ru.ayuandrey.notesmvvmapp.utils.Constants
+import ru.ayuandrey.notesmvvmapp.utils.DB_TYPE
+import ru.ayuandrey.notesmvvmapp.utils.TYPE_FIREBASE
+import ru.ayuandrey.notesmvvmapp.utils.TYPE_ROOM
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -51,10 +54,15 @@ import ru.ayuandrey.notesmvvmapp.utils.Constants
 @Composable
 fun NoteScreen(navController: NavHostController, viewModel: MainViewModel, noteId: String?) {
     val notes = viewModel.readAllNotes().observeAsState(listOf()).value
-    val note = notes.firstOrNull { it.id == noteId?.toInt() } ?: Note(
-        title = Constants.Keys.NONE,
-        subtitle = Constants.Keys.NONE
-    )
+    val note = when(DB_TYPE.value) {
+        TYPE_ROOM -> {
+            notes.firstOrNull { it.id == noteId?.toInt() } ?: Note()
+        }
+        TYPE_FIREBASE -> {
+            notes.firstOrNull { it.firebaseId == noteId } ?: Note()
+        }
+        else -> Note()
+    }
     val bottomSheetState = rememberModalBottomSheetState()
     val coroutineScope = rememberCoroutineScope()
     var showBottomSheet by remember { mutableStateOf(false) }
@@ -114,7 +122,7 @@ fun NoteScreen(navController: NavHostController, viewModel: MainViewModel, noteI
                 }
                 Button(
                     onClick = {
-                        viewModel.deleteNote(note = Note(id = note.id, title = title, subtitle = subtitle)
+                        viewModel.deleteNote(note = Note(id = note.id, title = title, subtitle = subtitle, firebaseId = note.firebaseId)
                         ) {
                             navController.navigate(NavRoute.Main.route)
                         }
@@ -134,12 +142,6 @@ fun NoteScreen(navController: NavHostController, viewModel: MainViewModel, noteI
             }
         }
     }
-
-
-
-
-
-
 
     if (showBottomSheet) {
         ModalBottomSheet(
@@ -166,22 +168,21 @@ fun NoteScreen(navController: NavHostController, viewModel: MainViewModel, noteI
                     )
                     OutlinedTextField(
                         value = subtitle,
-                        onValueChange = { title = it },
+                        onValueChange = { subtitle = it },
                         label = { Text(text = Constants.Keys.SUBTITLE) },
                         isError = subtitle.isEmpty()
                     )
                     Button(
-                        modifier = Modifier
-                            .padding(top = 16.dp),
+                        modifier = Modifier.padding(top = 16.dp),
                         onClick = {
                             viewModel.updateNote(
-                                note = Note(id = note.id, title = title, subtitle = subtitle)
+                                note = Note(id = note.id, title = title, subtitle = subtitle, firebaseId = note.firebaseId)
                             ) {
                                 navController.navigate(NavRoute.Main.route)
                             }
                         }
                     ) {
-                        Text(text = Constants.Keys.SUBTITLE)
+                        Text(text = Constants.Keys.UPDATE_NOTE)
                     }
                 }
             }

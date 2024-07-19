@@ -12,18 +12,19 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import ru.ayuandrey.notesmvvmapp.database.firebase.AppFirebaseRepository
 import ru.ayuandrey.notesmvvmapp.database.room.AppRoomDatabase
 import ru.ayuandrey.notesmvvmapp.database.room.repository.RoomRepository
 import ru.ayuandrey.notesmvvmapp.model.Note
+import ru.ayuandrey.notesmvvmapp.utils.Constants
+import ru.ayuandrey.notesmvvmapp.utils.DB_TYPE
 import ru.ayuandrey.notesmvvmapp.utils.REPOSITORY
 import ru.ayuandrey.notesmvvmapp.utils.TYPE_FIREBASE
 import ru.ayuandrey.notesmvvmapp.utils.TYPE_ROOM
 
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
-
     val context = application
-
     fun initDatabase(type: String, onSuccess: () -> Unit) {
         Log.d("проверка данных", "MainViewModel создание БД $type")
         when (type) {
@@ -31,6 +32,13 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 val dao = AppRoomDatabase.getInstance(context = context).getRoomDao()
                 REPOSITORY = RoomRepository(dao)
                 onSuccess()
+            }
+            TYPE_FIREBASE -> {
+                REPOSITORY = AppFirebaseRepository()
+                REPOSITORY.connectToDatabase(
+                    { onSuccess() },
+                    { Log.d("checkData", "Error: ${it}") }
+                )
             }
         }
     }
@@ -64,8 +72,20 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             }
         }
     }
-
     fun readAllNotes() = REPOSITORY.readAll
+
+
+    fun signOut(onSuccess: () -> Unit) {
+        when (DB_TYPE.value) {
+            TYPE_FIREBASE,
+            TYPE_ROOM -> {
+                REPOSITORY.signOut()
+                DB_TYPE.value = Constants.Keys.EMPTY
+                onSuccess()
+            }
+            else -> { Log.d("checkData", "signOut: ELSE: ${DB_TYPE.value}") }
+        }
+    }
 }
 
 class MainViewModelFactory(private val application: Application) : ViewModelProvider.Factory {

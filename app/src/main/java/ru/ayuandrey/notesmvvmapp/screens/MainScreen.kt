@@ -35,6 +35,10 @@ import ru.ayuandrey.notesmvvmapp.MainViewModel
 import ru.ayuandrey.notesmvvmapp.MainViewModelFactory
 import ru.ayuandrey.notesmvvmapp.model.Note
 import ru.ayuandrey.notesmvvmapp.navigation.NavRoute
+import ru.ayuandrey.notesmvvmapp.utils.Constants
+import ru.ayuandrey.notesmvvmapp.utils.DB_TYPE
+import ru.ayuandrey.notesmvvmapp.utils.TYPE_FIREBASE
+import ru.ayuandrey.notesmvvmapp.utils.TYPE_ROOM
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -66,12 +70,17 @@ fun MainScreen(navController: NavHostController, viewModel: MainViewModel) {
 
 @Composable
 fun NoteItem(note: Note, navController: NavHostController) {
+    val noteId = when(DB_TYPE.value) {
+        TYPE_FIREBASE -> note.firebaseId
+        TYPE_ROOM -> note.id
+        else -> Constants.Keys.EMPTY
+    }
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp, horizontal = 24.dp)
             .clickable {
-                navController.navigate(NavRoute.Note.route + "/${note.id}")
+                navController.navigate(NavRoute.Note.route + "/${noteId}")
             },
     ) {
         Column(
