@@ -1,12 +1,9 @@
 plugins {
-    //id("kotlin-kapt")
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
-    //kotlin("kapt") version "2.0.0"
-    //id("com.google.devtools.ksp")
     alias(libs.plugins.compilerKsp)
-    //id("kotlin-kapt")
-    //id("com.google.devtools.ksp")
+    alias(libs.plugins.googleService)
+    //id("com.google.gms.google-services")
 }
 
 android {
@@ -71,6 +68,8 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.firebase.auth)
+    implementation(libs.firebase.database)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -79,34 +78,18 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-
     implementation(libs.androidx.navigation.compose)
-
 
     implementation(libs.androidx.runtime.livedata)
 
-
-
-
-
     implementation (libs.androidx.room.runtime)
     implementation (libs.androidx.room.ktx)
-
-
-
-//    implementation(libs.androidx.room)
-//    annotationProcessor(libs.androidx.room.annotation.processor)
-//    ksp(libs.androidx.room.annotation.processor)
-
-
-//    val room_version = "2.6.1"
-//    implementation(libs.androidx.room.runtime)
     ksp(libs.androidx.room.compiler)
 
 
     annotationProcessor(libs.androidx.room.compiler)
-    //ksp(libs.androidx.room.compiler)
 
+    implementation(libs.firebase.bom)
 
 
 }
