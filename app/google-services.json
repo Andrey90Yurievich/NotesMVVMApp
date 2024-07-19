@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "532388074996",
+    "project_id": "notes-mvvm-app",
+    "storage_bucket": "notes-mvvm-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:532388074996:android:d0483afffbff04388d95a1",
+        "android_client_info": {
+          "package_name": "ru.ayuandrey.notesmvvmapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC75yWrLsHAwGKBBqk2kP9kH_ti7ptBIv8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="ru.ayuandrey.notesmvvmapp" />
+                  <option name="mobileSdkAppId" value="1:532388074996:android:d0483afffbff04388d95a1" />
+                  <option name="projectId" value="notes-mvvm-app" />
+                  <option name="projectNumber" value="532388074996" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />
